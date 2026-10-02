@@ -66,9 +66,11 @@ does not leave unused space in the scheduler list.
 
 ## GitHub installation
 
-The `rbxts` branch includes a root `package.json`, generated Luau output, and
-TypeScript declarations. This makes the fork installable directly through Bun:
+The `main` branch contains the original Luau source together with a root
+`package.json`, generated Luau output, and TypeScript declarations. Luau users
+can consume or download the source normally, while roblox-ts users can install
+the same branch directly through Bun:
 
 ```json
-"@rbxts/jabby": "github:Loner1536/jabby#rbxts"
+"@rbxts/jabby": "github:Loner1536/jabby#main"
 ```

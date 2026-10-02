@@ -4,13 +4,13 @@ jabby is a debugger for [jecs](https://github.com/ukendio/jecs) based off [gorp]
 
 It's still in the early stages of development and is very experimental.
 
-This fork is consumed directly from its `rbxts` GitHub branch and is not
-published to npm or Wally:
+This fork is consumed directly from its `main` GitHub branch and is not
+published to npm:
 
 ```json
 {
     "dependencies": {
-        "@rbxts/jabby": "github:Loner1536/jabby#rbxts"
+        "@rbxts/jabby": "github:Loner1536/jabby#main"
     }
 }
 ```
