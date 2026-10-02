@@ -1,0 +1,25 @@
+{
+    "name": "@loner1536/jabby",
+    "version": "0.6.1-fork.1",
+    "description": "Jabby with hierarchical scheduler categories for roblox-ts",
+    "private": true,
+    "main": "out/init.lua",
+    "types": "out/index.d.ts",
+    "files": [
+        "out",
+        "README.md",
+        "LICENSE"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Loner1536/jabby.git"
+    },
+    "license": "MIT",
+    "peerDependencies": {
+        "@rbxts/jecs": "^0.10.0"
+    },
+    "dependencies": {
+        "@rbxts/pebble": "0.1.2",
+        "@rbxts/vide": "^0.6.0"
+    }
+}

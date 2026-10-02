@@ -6,4 +6,5 @@
 
 ## Miscallaneous
 
+- [Differences from upstream](./fork-differences.md)
 - [Jabby Querying Language](./querying-language.md)

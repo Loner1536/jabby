@@ -29,15 +29,17 @@ The system id unique to the scheduler.
 ```luau
 type SystemData = {
     name: string,
-    phase: string?,
+    category: string?,
+    subcategory: string?,
     paused: boolean?
 }
 ```
 
 ```luau
 local id = scheduler:register_system({
-    name = "update_velocity",
-    phase = "physics",
+    name = "Prediction",
+    category = "Movement",
+    subcategory = "Sprint",
     paused = false
 })
 ```

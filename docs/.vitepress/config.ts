@@ -78,6 +78,7 @@ export default defineConfig({
             ],
             "/resources/": [
                 { text: "Resources", link: "/resources/" },
+                { text: "Fork differences", link: "/resources/fork-differences/" },
                 { text: "Getting Started", collapsed: false, items: [
                     { text: "Installation", link: "/resources/getting-started/1-install/" },
                     { text: "Setting up", link: "/resources/getting-started/2-setting-up/" },
@@ -88,7 +89,7 @@ export default defineConfig({
         },
 
         socialLinks: [
-            { icon: "github", link: "https://github.com/alicesaidhi/jabby" }
+            { icon: "github", link: "https://github.com/Loner1536/jabby" }
         ]
     }
 })

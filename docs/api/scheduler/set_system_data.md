@@ -37,7 +37,8 @@ scheduler:set_system_data(
 ```luau
 type SystemData = {
     name: string?,
-    phase: number?,
+    category: string?,
+    subcategory: string?,
     paused: boolean?
 }
 ```

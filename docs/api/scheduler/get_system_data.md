@@ -38,9 +38,13 @@ scheduler:get_system_data(id: number)
 
 The name of the system that is executed.
 
-### `phase` <Badge type="info" text="string?"/>
+### `category` <Badge type="info" text="string?"/>
 
-The phase the system is executed in by the guest scheduler.
+The system's optional top-level presentation category.
+
+### `subcategory` <Badge type="info" text="string?"/>
+
+The optional nested presentation category beneath `category`.
 
 ### `paused` <Badge type="info" text="boolean"/>
 
@@ -53,7 +57,8 @@ will not run the system.
 ```luau
 type SystemData = {
     name: string,
-    phase: string?,
+    category: string?,
+    subcategory: string?,
     paused: boolean
 }
 ```

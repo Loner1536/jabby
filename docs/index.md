@@ -21,7 +21,7 @@ hero:
       link: /api/
     - theme: alt
       text: Github
-      link: https://github.com/alicesaidhi/jabby
+      link: https://github.com/Loner1536/jabby
 features:
   - title: Query your worlds
     details: Query your ECS worlds and figure out what entities exist using the built-in query language.
