@@ -76,11 +76,10 @@ local id = scheduler:register_system({
 })
 ```
 
-When a category is collapsed, its header displays the distinct schedules used
-by its systems, such as `Visual (PreRender, Heartbeat)`. Expanding the category
-hides that summary from the header and displays each system's own schedule next
-to its name instead. Schedule labels use the disabled typography color so they
-remain visually secondary.
+The top-level category label displays the distinct schedules used by its
+systems, such as `Visual (PreRender, Heartbeat)`. System rows keep their live
+timing value in a stable right-hand column. Subcategories and their systems
+remain indented beneath the category with low-contrast tree guides.
 
 The field is generic metadata: Jabby does not require Planck or RunService.
 Scheduler adapters are responsible for discovering and supplying schedule

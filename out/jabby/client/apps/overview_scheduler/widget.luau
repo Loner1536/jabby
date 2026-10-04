@@ -237,15 +237,6 @@ return function(props: props)
 			pebble.typography {
 				automaticsize = Enum.AutomaticSize.XY,
 				text = function()
-					return format_schedules({ id })
-				end,
-				xalignment = Enum.TextXAlignment.Right,
-				disabled = true,
-			},
-
-			pebble.typography {
-				automaticsize = Enum.AutomaticSize.XY,
-				text = function()
 					local sum = 0
 					local frames = props.system_frames()[id]
 
@@ -435,22 +426,16 @@ return function(props: props)
 
 				pebble.typography {
 					size = UDim2.fromScale(0, 1),
-					text = name,
+					text = function()
+						local schedules = format_schedules(group().all_systems)
+						return if schedules == "" then name else `{name} {schedules}`
+					end,
 					truncate = Enum.TextTruncate.SplitWord,
 					xalignment = Enum.TextXAlignment.Left,
 
 					create "UIFlexItem" {
 						FlexMode = Enum.UIFlexMode.Fill
 					}
-				},
-
-				pebble.typography {
-					automaticsize = Enum.AutomaticSize.XY,
-					text = function()
-						return if expanded() then "" else format_schedules(group().all_systems)
-					end,
-					xalignment = Enum.TextXAlignment.Right,
-					disabled = true,
 				},
 
 				Activated = function()
