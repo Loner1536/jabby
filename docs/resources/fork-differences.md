@@ -98,6 +98,7 @@ the same branch directly through Bun:
 ```
 
 The development Rojo project uses the non-default filename
-`projects/jabby.project.json`. Root-level `*.project.json` files are intentionally omitted.
+`projects/jabby.project.json`. The root `default.project.json` maps only the compiled
+`out` module, and other root-level `*.project.json` files are intentionally omitted.
 This prevents Rojo from replacing the compiled package
 with raw source when the Git repository is installed under `node_modules`.
