@@ -278,7 +278,7 @@ return function(props: props)
 	end
 
 	local function subcategory(systems: () -> {number}, name: string)
-		local expanded = source(true)
+		local expanded = source(false)
 		local content_size = source(Vector2.zero)
 		local content_height = spring(function()
 			return if expanded() then content_size().Y else 0
@@ -405,7 +405,7 @@ return function(props: props)
 		systems: {number},
 		subcategories: {[string]: {number}}
 	}, name: string)
-		local expanded = source(true)
+		local expanded = source(false)
 		local gui_state = source(Enum.GuiState.Idle)
 		local content_size = source(Vector2.zero)
 
