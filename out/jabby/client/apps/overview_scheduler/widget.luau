@@ -117,6 +117,22 @@ return function(props: props)
 		return `({table.concat(schedules, ", ")})`
 	end
 
+	local function escape_rich_text(value: string)
+		return string.gsub(value, "[&<>'\"]", {
+			["&"] = "&amp;",
+			["<"] = "&lt;",
+			[">"] = "&gt;",
+			["'"] = "&apos;",
+			['"'] = "&quot;"
+		})
+	end
+
+	local function format_schedule_label(name: string, schedules: string)
+		if schedules == "" then return escape_rich_text(name) end
+		local color = pebble.theme.fg_on_bg_low[0]():ToHex()
+		return `{escape_rich_text(name)} <font color="#{color}">{escape_rich_text(schedules)}</font>`
+	end
+
 	local function system(id: number, show_schedules: boolean?)
 		local gui_state = source(Enum.GuiState.Idle)
 
@@ -220,7 +236,7 @@ return function(props: props)
 				text = function()
 					local name = props.system_data()[id].name
 					local schedules = if show_schedules == false then "" else format_schedules({ id })
-					return if schedules == "" then name else `{name} {schedules}`
+					return format_schedule_label(name, schedules)
 				end,
 
 				truncate = Enum.TextTruncate.SplitWord,
@@ -228,6 +244,8 @@ return function(props: props)
 				disabled = function()
 					return props.system_data()[id].paused
 				end,
+
+				{ RichText = true },
 
 				create "UIFlexItem" {
 					FlexMode = Enum.UIFlexMode.Fill,
@@ -336,9 +354,11 @@ return function(props: props)
 					size = UDim2.fromScale(0, 1),
 					text = function()
 						local schedules = format_schedules(systems())
-						return if expanded() or schedules == "" then name else `{name} {schedules}`
+						return format_schedule_label(name, if expanded() then "" else schedules)
 					end,
 					xalignment = Enum.TextXAlignment.Left,
+
+					{ RichText = true },
 
 					create "UIFlexItem" {
 						FlexMode = Enum.UIFlexMode.Fill
@@ -435,10 +455,12 @@ return function(props: props)
 					size = UDim2.fromScale(0, 1),
 					text = function()
 						local schedules = format_schedules(group().all_systems)
-						return if expanded() or schedules == "" then name else `{name} {schedules}`
+						return format_schedule_label(name, if expanded() then "" else schedules)
 					end,
 					truncate = Enum.TextTruncate.SplitWord,
 					xalignment = Enum.TextXAlignment.Left,
+
+					{ RichText = true },
 
 					create "UIFlexItem" {
 						FlexMode = Enum.UIFlexMode.Fill
