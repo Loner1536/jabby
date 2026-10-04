@@ -18,8 +18,8 @@ published to npm:
 See the [installation guide](./docs/resources/getting-started/1-install.md) and
 [fork differences](./docs/resources/fork-differences.md) for details.
 
-The source-only Rojo project is named `jabby.project.json` deliberately. Git
-dependencies are mounted from `node_modules`, where a `default.project.json`
+The source-only Rojo project lives at `projects/jabby.project.json` deliberately. Git
+dependencies are mounted from `node_modules`, where any root-level `*.project.json`
 would override the compiled `out` package layout expected by roblox-ts.
 
 ## Differences from upstream
