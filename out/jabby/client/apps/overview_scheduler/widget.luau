@@ -117,7 +117,7 @@ return function(props: props)
 		return `({table.concat(schedules, ", ")})`
 	end
 
-	local function system(id: number)
+	local function system(id: number, show_schedules: boolean?)
 		local gui_state = source(Enum.GuiState.Idle)
 
 		local function frame_time()
@@ -218,7 +218,9 @@ return function(props: props)
 			pebble.typography {
 				automaticsize = Enum.AutomaticSize.None,
 				text = function()
-					return props.system_data()[id].name
+					local name = props.system_data()[id].name
+					local schedules = if show_schedules == false then "" else format_schedules({ id })
+					return if schedules == "" then name else `{name} {schedules}`
 				end,
 
 				truncate = Enum.TextTruncate.SplitWord,
@@ -332,7 +334,10 @@ return function(props: props)
 
 				pebble.typography {
 					size = UDim2.fromScale(0, 1),
-					text = name,
+					text = function()
+						local schedules = format_schedules(systems())
+						return if expanded() or schedules == "" then name else `{name} {schedules}`
+					end,
 					xalignment = Enum.TextXAlignment.Left,
 
 					create "UIFlexItem" {
@@ -366,7 +371,9 @@ return function(props: props)
 						end
 					},
 
-					values(systems, system),
+					values(systems, function(id)
+						return system(id, true)
+					end),
 					changed("AbsoluteSize", content_size)
 				}
 			}
@@ -428,7 +435,7 @@ return function(props: props)
 					size = UDim2.fromScale(0, 1),
 					text = function()
 						local schedules = format_schedules(group().all_systems)
-						return if schedules == "" then name else `{name} {schedules}`
+						return if expanded() or schedules == "" then name else `{name} {schedules}`
 					end,
 					truncate = Enum.TextTruncate.SplitWord,
 					xalignment = Enum.TextXAlignment.Left,
@@ -467,7 +474,9 @@ return function(props: props)
 
 					values(function()
 						return group().systems
-					end, system),
+					end, function(id)
+						return system(id, true)
+					end),
 
 					indexes(function()
 						return group().subcategories
@@ -645,7 +654,9 @@ return function(props: props)
 
 				values(function()
 					return map_categories_to_systems()[false].systems
-				end, system),
+				end, function(id)
+					return system(id, true)
+				end),
 
 				indexes(map_categories_to_systems, function(group, name)
 					if name == false then return {} end
