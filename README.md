@@ -28,5 +28,8 @@ See the [installation guide](./docs/resources/getting-started/1-install.md) and
   hierarchy guides.
 - Collapsed subcategories animate to their header height and do not retain
   empty layout space.
+- Scheduler categories summarize their systems' optional RunService schedules
+  while collapsed. Expanding a category hides that summary and shows each
+  system's schedule beside its name instead.
 - The repository includes a roblox-ts-compatible package entry point and type
   declarations so Bun can install this branch directly from GitHub.

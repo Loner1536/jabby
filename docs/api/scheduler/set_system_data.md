@@ -39,6 +39,7 @@ type SystemData = {
     name: string?,
     category: string?,
     subcategory: string?,
+    schedules: {string}?,
     paused: boolean?
 }
 ```

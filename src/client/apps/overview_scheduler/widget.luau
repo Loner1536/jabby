@@ -66,12 +66,13 @@ return function(props: props)
 
 	local map_categories_to_systems = derive(function()
 		type Group = {
+			all_systems: {number},
 			systems: {number},
 			subcategories: {[string]: {number}}
 		}
 
 		local categories: {[false | string]: Group} = {
-			[false] = { systems = {}, subcategories = {} }
+			[false] = { all_systems = {}, systems = {}, subcategories = {} }
 		}
 
 		for id, data in props.system_data() do
@@ -79,9 +80,10 @@ return function(props: props)
 			local group = categories[category]
 
 			if group == nil then
-				group = { systems = {}, subcategories = {} }
+				group = { all_systems = {}, systems = {}, subcategories = {} }
 				categories[category] = group
 			end
+			table.insert(group.all_systems, id)
 
 			if data.subcategory == nil then
 				table.insert(group.systems, id)
@@ -94,6 +96,26 @@ return function(props: props)
 
 		return categories
 	end)
+
+	local function format_schedules(system_ids: {number})
+		local seen = {}
+		local schedules = {}
+
+		for _, id in system_ids do
+			local data = props.system_data()[id]
+			if data == nil or data.schedules == nil then continue end
+
+			for _, schedule in data.schedules do
+				if seen[schedule] then continue end
+				seen[schedule] = true
+				table.insert(schedules, schedule)
+			end
+		end
+
+		table.sort(schedules)
+		if #schedules == 0 then return "" end
+		return `({table.concat(schedules, ", ")})`
+	end
 
 	local function system(id: number)
 		local gui_state = source(Enum.GuiState.Idle)
@@ -210,6 +232,15 @@ return function(props: props)
 					GrowRatio = 1,
 					ShrinkRatio = 1
 				}
+			},
+
+			pebble.typography {
+				automaticsize = Enum.AutomaticSize.XY,
+				text = function()
+					return format_schedules({ id })
+				end,
+				xalignment = Enum.TextXAlignment.Right,
+				disabled = true,
 			},
 
 			pebble.typography {
@@ -345,6 +376,118 @@ return function(props: props)
 					},
 
 					values(systems, system),
+					changed("AbsoluteSize", content_size)
+				}
+			}
+		}
+	end
+
+	local function category(group: () -> {
+		all_systems: {number},
+		systems: {number},
+		subcategories: {[string]: {number}}
+	}, name: string)
+		local expanded = source(true)
+		local gui_state = source(Enum.GuiState.Idle)
+		local content_size = source(Vector2.zero)
+
+		return pebble.container {
+			Name = name,
+			Size = spring(function()
+				if not expanded() then return UDim2.new(1, 0, 0, 32) end
+				return UDim2.new(1, 0, 0, 40 + content_size().Y)
+			end, 0.1),
+			ClipsDescendants = true,
+
+			create "ImageButton" {
+				Name = "Category",
+				AutoLocalize = false,
+				Size = UDim2.new(1, 0, 0, 32),
+				BackgroundColor3 = spring(function()
+					return if gui_state() == Enum.GuiState.Press then
+						pebble.theme.bg[-1]()
+					elseif gui_state() == Enum.GuiState.Hover then
+						pebble.theme.bg[3]()
+					else
+						pebble.theme.bg[0]()
+				end, 0.1),
+
+				pebble.padding { x = UDim.new(0, 8) },
+
+				create "UIListLayout" {
+					FillDirection = Enum.FillDirection.Horizontal,
+					VerticalAlignment = Enum.VerticalAlignment.Center,
+					Padding = UDim.new(0, 8)
+				},
+
+				create "UICorner" {
+					CornerRadius = UDim.new(0, 8)
+				},
+
+				create "ImageLabel" {
+					Size = UDim2.fromOffset(16, 16),
+					BackgroundTransparency = 1,
+					Image = CHEVRON_DOWN,
+					Rotation = spring(function()
+						return if expanded() then 180 else 0
+					end, 0.1)
+				},
+
+				pebble.typography {
+					size = UDim2.fromScale(0, 1),
+					text = name,
+					truncate = Enum.TextTruncate.SplitWord,
+					xalignment = Enum.TextXAlignment.Left,
+
+					create "UIFlexItem" {
+						FlexMode = Enum.UIFlexMode.Fill
+					}
+				},
+
+				pebble.typography {
+					automaticsize = Enum.AutomaticSize.XY,
+					text = function()
+						return if expanded() then "" else format_schedules(group().all_systems)
+					end,
+					xalignment = Enum.TextXAlignment.Right,
+					disabled = true,
+				},
+
+				Activated = function()
+					expanded(not expanded())
+				end,
+
+				changed("GuiState", gui_state)
+			},
+
+			pebble.container {
+				Name = "Children",
+				Position = UDim2.fromOffset(0, 40),
+				Size = function()
+					return UDim2.new(1, 0, 0, content_size().Y)
+				end,
+				ClipsDescendants = true,
+
+				pebble.container {
+					Size = UDim2.fromScale(1, 0),
+					AutomaticSize = Enum.AutomaticSize.Y,
+
+					create "UIListLayout" {
+						FillDirection = Enum.FillDirection.Vertical,
+						Padding = UDim.new(0, 8),
+						SortOrder = function()
+							return if sort_by() == 1 then Enum.SortOrder.Name else Enum.SortOrder.LayoutOrder
+						end
+					},
+
+					values(function()
+						return group().systems
+					end, system),
+
+					indexes(function()
+						return group().subcategories
+					end, subcategory),
+
 					changed("AbsoluteSize", content_size)
 				}
 			}
@@ -519,36 +662,9 @@ return function(props: props)
 					return map_categories_to_systems()[false].systems
 				end, system),
 
-				indexes(map_categories_to_systems, function(group, category)
-					if category == false then return {} end
-					local expanded = source(true)
-
-					return pebble.accordion {
-						expanded = expanded,
-						set_expanded = expanded,
-						text = category,
-						
-						pebble.container {
-							Size = UDim2.fromScale(1, 0),
-
-							create "UIListLayout" {
-								FillDirection = Enum.FillDirection.Vertical,
-								Padding = UDim.new(0, 8),
-			
-								SortOrder = function()
-									return if sort_by() == 1 then Enum.SortOrder.Name else Enum.SortOrder.LayoutOrder
-								end
-							},
-	
-							values(function()
-								return group().systems
-							end, system),
-
-							indexes(function()
-								return group().subcategories
-							end, subcategory)
-						}
-					}
+				indexes(map_categories_to_systems, function(group, name)
+					if name == false then return {} end
+					return category(group, name)
 				end),
 
 			}

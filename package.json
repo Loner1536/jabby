@@ -1,6 +1,6 @@
 {
     "name": "@loner1536/jabby",
-    "version": "0.6.1-fork.1",
+    "version": "0.6.1-fork.2",
     "description": "Jabby with hierarchical scheduler categories for roblox-ts",
     "private": true,
     "main": "out/init.lua",

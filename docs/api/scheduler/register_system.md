@@ -31,6 +31,7 @@ type SystemData = {
     name: string,
     category: string?,
     subcategory: string?,
+    schedules: {string}?,
     paused: boolean?
 }
 ```
@@ -40,6 +41,7 @@ local id = scheduler:register_system({
     name = "Prediction",
     category = "Movement",
     subcategory = "Sprint",
+    schedules = { "Heartbeat" },
     paused = false
 })
 ```

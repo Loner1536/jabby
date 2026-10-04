@@ -35,6 +35,7 @@ export type SystemTag = "processing" | "finished" | "paused"
 export type SystemSettingData = {
 	category: string?,
 	subcategory: string?,
+	schedules: {string}?,
 	name: string?,
 	layout_order: number?,
 	paused: boolean?
@@ -42,6 +43,7 @@ export type SystemSettingData = {
 export type SystemData = {
 	category: string?,
 	subcategory: string?,
+	schedules: {string}?,
 	name: string,
 	layout_order: number,
 	paused: boolean

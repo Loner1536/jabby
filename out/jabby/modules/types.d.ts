@@ -41,6 +41,7 @@ export type SystemTag = "processing" | "finished" | "paused"
 export interface SystemSettingData {
 	category?: string,
 	subcategory?: string,
+	schedules?: string[],
 	name?: string,
 	layout_order?: number,
 	paused?: boolean,
@@ -48,6 +49,7 @@ export interface SystemSettingData {
 export interface SystemData {
 	category?: string,
 	subcategory?: string,
+	schedules?: string[],
 	name: string,
 	layout_order: number,
 	paused: boolean

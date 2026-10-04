@@ -3,10 +3,10 @@
 The scheduler is an interface for jabby into a generic ECS scheduler. Schedulers
 expect the common notion that logic is executed within systems, not out of order.
 Systems can optionally be organized into a category and one nested subcategory.
-Both add collapsible groups in the
-[scheduler applet](../applets/scheduler.md). Scheduler adapters should translate
-their execution-specific concepts, such as Planck phases, into these generic
-presentation fields.
+Both add collapsible groups in the [scheduler applet](../applets/scheduler.md).
+Systems may also provide generic `schedules` metadata for event labels.
+Scheduler adapters should translate their execution-specific concepts, such as
+Planck phases and RunService events, into these presentation fields.
 
 ## API
 

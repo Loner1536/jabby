@@ -72,6 +72,7 @@ local function create_scheduler()
 		scheduler.system_data[id] = {
 			category = nil,
 			subcategory = nil,
+			schedules = nil,
 			name = "UNNAMED",
 			layout_order = 0,
 			paused = false

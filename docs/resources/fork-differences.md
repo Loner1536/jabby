@@ -64,6 +64,28 @@ height transitions, and low-contrast hierarchy guides. Closing a subcategory
 clips its children while its height springs down to the header height, so it
 does not leave unused space in the scheduler list.
 
+## RunService schedule labels
+
+Scheduler systems may provide one or more optional schedule names:
+
+```luau
+local id = scheduler:register_system({
+    category = "Visual",
+    name = "FirstPerson",
+    schedules = { "PreRender" }
+})
+```
+
+When a category is collapsed, its header displays the distinct schedules used
+by its systems, such as `Visual (PreRender, Heartbeat)`. Expanding the category
+hides that summary from the header and displays each system's own schedule next
+to its name instead. Schedule labels use the disabled typography color so they
+remain visually secondary.
+
+The field is generic metadata: Jabby does not require Planck or RunService.
+Scheduler adapters are responsible for discovering and supplying schedule
+names when they can do so automatically.
+
 ## GitHub installation
 
 The `main` branch contains the original Luau source together with a root
