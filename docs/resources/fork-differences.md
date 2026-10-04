@@ -96,3 +96,7 @@ the same branch directly through Bun:
 ```json
 "@rbxts/jabby": "github:Loner1536/jabby#main"
 ```
+
+The development Rojo project uses the non-default filename
+`jabby.project.json`. This prevents Rojo from replacing the compiled package
+with raw source when the Git repository is installed under `node_modules`.
