@@ -25,6 +25,8 @@ would override the compiled `out` package layout expected by roblox-ts.
 
 ## Differences from upstream
 
+![Scheduler hierarchy showing nested categories, subcategories, systems, and RunService schedules](./docs/public/scheduler-hierarchy.png)
+
 - Scheduler groups use generic `category` and `subcategory` metadata instead
   of presenting scheduler-specific `phase` metadata as a Jabby concept.
 - Scheduler systems render as `category → subcategory → system`, with either

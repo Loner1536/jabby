@@ -133,19 +133,19 @@ return function(props: props)
 		return `{escape_rich_text(name)} <font color="#{color}">{escape_rich_text(schedules)}</font>`
 	end
 
+	local function system_frame_time(id: number)
+		local sum = 0
+		local frames = props.system_frames()[id]
+
+		for _, frame in frames do
+			sum += frame.s
+		end
+
+		return sum / #frames
+	end
+
 	local function system(id: number, show_schedules: boolean?)
 		local gui_state = source(Enum.GuiState.Idle)
-
-		local function frame_time()
-			local sum = 0
-			local frames = props.system_frames()[id]
-
-			for _, frame in frames do
-				sum += frame.s
-			end
-
-			return sum / #frames
-		end
 
 		local b = create "ImageButton" {
 			Name = function()
@@ -154,7 +154,7 @@ return function(props: props)
 			Size = UDim2.new(1, 0, 0, 32),
 
 			LayoutOrder = function()
-				return if sort_by() == 3 then 1e9 - frame_time() * 1e8 else id
+				return if sort_by() == 3 then 1e9 - system_frame_time(id) * 1e8 else id
 			end,
 
 			BackgroundColor3 = function()
@@ -193,7 +193,7 @@ return function(props: props)
 					Position = UDim2.new(0, 0, 1, 4),
 					AnchorPoint = Vector2.new(0, 1),
 					Size = function()
-						return UDim2.new(frame_time() / max_frametime(), 0, 0, 1)
+						return UDim2.new(system_frame_time(id) / max_frametime(), 0, 0, 1)
 					end,
 
 					BackgroundColor3 = pebble.theme.fg_on_bg_high[0]
@@ -275,6 +275,48 @@ return function(props: props)
 
 		}
 		return b
+	end
+
+	local function category_system(id: number)
+		return pebble.container {
+			Name = function()
+				return props.system_data()[id].name
+			end,
+			Size = UDim2.new(1, 0, 0, 32),
+			LayoutOrder = function()
+				return if sort_by() == 3 then 1e9 - system_frame_time(id) * 1e8 else id
+			end,
+			Visible = function()
+				return not not string.match(props.system_data()[id].name, systems_query())
+			end,
+
+			create "Folder" {
+				create "Frame" {
+					Name = "CategoryGuide",
+					Position = UDim2.fromOffset(7, 0),
+					Size = UDim2.fromOffset(1, 16),
+					BackgroundColor3 = pebble.theme.fg_on_bg_low[0],
+					BackgroundTransparency = TREE_GUIDE_TRANSPARENCY,
+					BorderSizePixel = 0
+				},
+
+				create "Frame" {
+					Name = "CategoryBranch",
+					Position = UDim2.fromOffset(7, 15),
+					Size = UDim2.fromOffset(9, 1),
+					BackgroundColor3 = pebble.theme.fg_on_bg_low[0],
+					BackgroundTransparency = TREE_GUIDE_TRANSPARENCY,
+					BorderSizePixel = 0
+				}
+			},
+
+			pebble.container {
+				Position = UDim2.fromOffset(16, 0),
+				Size = UDim2.new(1, -16, 1, 0),
+
+				system(id, true)
+			}
+		}
 	end
 
 	local function subcategory(systems: () -> {number}, name: string)
@@ -497,7 +539,7 @@ return function(props: props)
 					values(function()
 						return group().systems
 					end, function(id)
-						return system(id, true)
+						return category_system(id)
 					end),
 
 					indexes(function()
